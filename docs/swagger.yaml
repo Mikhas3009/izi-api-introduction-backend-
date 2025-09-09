@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Task API
+  version: 1.0.0
+  description: API для управления задачами с единым форматом ответа
+servers:
+  - url: http://localhost:4000/api
+
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Операция выполнена успешно
+        data:
+          nullable: true
+
+    Task:
+      type: object
+      properties:
+        taskID:
+          type: integer
+          example: 1
+        taskTitle:
+          type: string
+          example: Сделать документацию
+        taskIsCompleted:
+          type: boolean
+          example: false
+
+    TaskListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+
+    TaskResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Task'
+
+    DeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                deletedCount:
+                  type: integer
+                  example: 1
+
+paths:
+  /tasks:
+    get:
+      summary: Получить список задач
+      responses:
+        '200':
+          description: Успешный ответ со списком задач
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+
+    post:
+      summary: Создать задачу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: Купить продукты
+      responses:
+        '201':
+          description: Задача создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /tasks/{id}:
+    patch:
+      summary: Изменить статус задачи
+      description: Устанавливает `taskIsCompleted` в `true` или `false`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID задачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - completed
+              properties:
+                completed:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Успешное обновление статуса задачи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+    delete:
+      summary: Удалить задачу
+      description: Удаляет задачу по её ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID задачи
+      responses:
+        '200':
+          description: Успешное удаление задачи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
