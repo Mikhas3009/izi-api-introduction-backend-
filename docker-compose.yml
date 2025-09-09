@@ -24,7 +24,7 @@ services:
     ports:
       - "${PORT:-4000}:4000"
     env_file:
-      - .env
+      - example.env
     environment:
       DB_HOST: db  
     depends_on:
