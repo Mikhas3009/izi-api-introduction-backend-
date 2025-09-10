@@ -17,3 +17,27 @@ http://localhost:4000/docs
 
 Для работы в POSTMAN импортируйте коллекцию:
 IZI-Api.postman_collection.json
+
+# Стуктура проекта
+src/
+ ├── core/                   # Бизнес-логика
+ │    ├── entities/          # Сущности (User, Order и т.д.)
+ │    ├── enums/             # Перечисления
+ │    ├── interfaces/        # Интерфейсы (IUserRepository и т.д.)
+ │    └── services/          # Сервисы
+ │
+ ├── application/            # Основной слой приложения 
+ │    ├── controllers/       # Контроллеры Express
+ │    ├── dto/               # DTO-объекты для API
+ │    ├── middlewares/       # Middleware 
+ │    └── routers/           # Маршруты Express
+ │
+ ├── infrastructure/         # Инфраструктура (внешние сервисы)
+ │    ├── config/            # Конфиги (db.config.ts, swagger.config.ts)
+ │    ├── repository/        # Реализации репозиториев (TypeORM)
+ │
+ ├── shared/                 # Общие модули
+ │    └── utils/             # Утилиты
+ │
+ ├── app.ts                  # Инициализация Express-приложения
+ └── server.ts               # Точка входа (запуск сервера)
