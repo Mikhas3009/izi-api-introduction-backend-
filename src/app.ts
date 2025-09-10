@@ -1,23 +1,21 @@
-import express from "express"
-import cors from "cors"
+import express from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
-import { handleNotFound } from "./middlewars/not-found-handler";
-import { TaskRouter } from "./routers/task.touter";
-import { setupSwagger } from "./config/swagget.config";
-
+import { handleNotFound } from "./application/middlewars/not-found-handler";
+import { setupSwagger } from "./infrastructure/config/swagger.config";
+import { TaskRouter } from "./application/routers/task.touter";
 
 export async function createApp() {
-
     const app = express();
-    app.use(cors())
-    app.use(bodyParser.json())
+    app.use(cors());
+    app.use(bodyParser.json());
     setupSwagger(app);
-    app.use(express.urlencoded({ extended: true }))
-    app.use(new TaskRouter().getRouter())
-    app.get('/', (req, res) => {
-        res.send("Hello")
-    })
-    app.use(handleNotFound)
+    app.use(express.urlencoded({ extended: true }));
+    app.use(new TaskRouter().getRouter());
+    app.get("/", (req, res) => {
+        res.send("Hello");
+    });
+    app.use(handleNotFound);
 
-    return app
+    return app;
 }

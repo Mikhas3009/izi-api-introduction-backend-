@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { TaskEntity } from "../entities/task.entity";
+import { TaskEntity } from "../../core/entities/task.entity";
 
 import dotenv from "dotenv";
 

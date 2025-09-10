@@ -2,19 +2,18 @@ import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
 
 @Entity()
 export class TaskEntity {
-
     @PrimaryGeneratedColumn()
-    taskID!: number
+    taskID!: number;
 
     @Column({
         unique: true,
-        nullable: false
+        nullable: false,
     })
-    taskTitle!: string
+    taskTitle!: string;
 
     @Column({
         type: "boolean",
-        default: false
+        default: false,
     })
-    taskIsCompleted!: boolean
+    taskIsCompleted!: boolean;
 }

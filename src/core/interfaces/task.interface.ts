@@ -1,6 +1,5 @@
 import { Request } from "express";
-import { TaskDto } from "../dto/task.dto";
-
+import { TaskDto } from "../../application/dto/task.dto";
 
 /**
  * Базовый интерфейс запроса сущности Task.

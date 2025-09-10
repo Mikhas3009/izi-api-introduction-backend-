@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
-
 /**
-     * Middlewar для преобразования тела запроса под сущность "Task"
-*/
+ * Middlewar для преобразования тела запроса под сущность "Task"
+ */
 export function validateAndTransformTask(req: Request, res: Response, next: NextFunction) {
-    
     const { title, completed } = req.body;
     const method = req.method.toUpperCase();
 
@@ -14,7 +12,6 @@ export function validateAndTransformTask(req: Request, res: Response, next: Next
             return res.status(400).json({ error: "Поле title является обязательным" });
         }
     }
-
 
     const task: Record<string, any> = {};
 

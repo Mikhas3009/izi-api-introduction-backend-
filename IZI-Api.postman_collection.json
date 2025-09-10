@@ -1,161 +1,135 @@
 {
-	"info": {
-		"_postman_id": "1f5fa085-a85d-4d8e-866e-ebf3e8dc1f12",
-		"name": "Тестовое задание IZI",
-		"description": "API для небольшого Task managera",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30310950",
-		"_collection_link": "https://restless-water-808707.postman.co/workspace/My-Workspace~fb5c988a-179c-45c7-88ee-1b3a1924f3a2/collection/30310950-1f5fa085-a85d-4d8e-866e-ebf3e8dc1f12?action=share&source=collection_link&creator=30310950"
-	},
-	"item": [
-		{
-			"name": "Получение списка задач",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/tasks",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"tasks"
-					]
-				},
-				"description": "Метод для получения списка всех задач"
-			},
-			"response": []
-		},
-		{
-			"name": "Создание задачи",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "title",
-							"value": "Подготовить документацию Postman",
-							"type": "text"
-						},
-						{
-							"key": "completed",
-							"value": "false",
-							"type": "text",
-							"disabled": true
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}/api/tasks",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"tasks"
-					]
-				},
-				"description": "Метод для создания задачи.  \nТело запроса содерижит в себе:  \n{  \ntitle:string,  \ncompleted?:boolean //необязательное поле  \n}"
-			},
-			"response": []
-		},
-		{
-			"name": "Удаление задачи",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/tasks/:id",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"tasks",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "9"
-						}
-					]
-				},
-				"description": "Метод для удаление задачи по ID  \nId задается как path-параметр"
-			},
-			"response": []
-		},
-		{
-			"name": "Изменение статуса задачи",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "completed",
-							"value": "true",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{host}}/api/tasks/:id",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"tasks",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "13"
-						}
-					]
-				},
-				"description": "Метод для изменения статуса задачи по ID\n\nНа вход подается path-параметр id,  \nТело запроса содержит в себе:  \n{  \ncompleted:boolean  \n}"
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "host",
-			"value": "http://localhost:4000"
-		},
-		{
-			"key": "remote_host",
-			"value": "",
-			"type": "default"
-		}
-	]
+    "info": {
+        "_postman_id": "1f5fa085-a85d-4d8e-866e-ebf3e8dc1f12",
+        "name": "Тестовое задание IZI",
+        "description": "API для небольшого Task managera",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "30310950",
+        "_collection_link": "https://restless-water-808707.postman.co/workspace/My-Workspace~fb5c988a-179c-45c7-88ee-1b3a1924f3a2/collection/30310950-1f5fa085-a85d-4d8e-866e-ebf3e8dc1f12?action=share&source=collection_link&creator=30310950"
+    },
+    "item": [
+        {
+            "name": "Получение списка задач",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{host}}/api/tasks",
+                    "host": ["{{host}}"],
+                    "path": ["api", "tasks"]
+                },
+                "description": "Метод для получения списка всех задач"
+            },
+            "response": []
+        },
+        {
+            "name": "Создание задачи",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "title",
+                            "value": "Подготовить документацию Postman",
+                            "type": "text"
+                        },
+                        {
+                            "key": "completed",
+                            "value": "false",
+                            "type": "text",
+                            "disabled": true
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{host}}/api/tasks",
+                    "host": ["{{host}}"],
+                    "path": ["api", "tasks"]
+                },
+                "description": "Метод для создания задачи.  \nТело запроса содерижит в себе:  \n{  \ntitle:string,  \ncompleted?:boolean //необязательное поле  \n}"
+            },
+            "response": []
+        },
+        {
+            "name": "Удаление задачи",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "{{host}}/api/tasks/:id",
+                    "host": ["{{host}}"],
+                    "path": ["api", "tasks", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "9"
+                        }
+                    ]
+                },
+                "description": "Метод для удаление задачи по ID  \nId задается как path-параметр"
+            },
+            "response": []
+        },
+        {
+            "name": "Изменение статуса задачи",
+            "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "completed",
+                            "value": "true",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{host}}/api/tasks/:id",
+                    "host": ["{{host}}"],
+                    "path": ["api", "tasks", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "13"
+                        }
+                    ]
+                },
+                "description": "Метод для изменения статуса задачи по ID\n\nНа вход подается path-параметр id,  \nТело запроса содержит в себе:  \n{  \ncompleted:boolean  \n}"
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "host",
+            "value": "http://localhost:4000"
+        },
+        {
+            "key": "remote_host",
+            "value": "",
+            "type": "default"
+        }
+    ]
 }
