@@ -22,9 +22,9 @@ IZI-Api.postman_collection.json
 ``` bash
 src/
  ├── core/                   # Бизнес-логика
- │    ├── entities/          # Сущности (User, Order и т.д.)
+ │    ├── entities/          # Сущности (Task)
  │    ├── enums/             # Перечисления
- │    ├── interfaces/        # Интерфейсы (IUserRepository и т.д.)
+ │    ├── interfaces/        # Интерфейсы (TaskRequestInterface и т.д.)
  │    └── services/          # Сервисы
  │
  ├── application/            # Основной слой приложения 
