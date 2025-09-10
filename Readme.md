@@ -2,7 +2,7 @@
 [Клиентская часть](https://github.com/Mikhas3009/izi-api-introduction-frontend-)
 # Запуск приложения
 
-# Разворачивание с помощью Docker
+## Разворачивание с помощью Docker
 
 Для запуска приложения с использованием Docker выполните следующие шаги:
 
@@ -19,6 +19,7 @@ http://localhost:4000/docs
 IZI-Api.postman_collection.json
 
 # Стуктура проекта
+``` bash
 src/
  ├── core/                   # Бизнес-логика
  │    ├── entities/          # Сущности (User, Order и т.д.)
@@ -41,3 +42,4 @@ src/
  │
  ├── app.ts                  # Инициализация Express-приложения
  └── server.ts               # Точка входа (запуск сервера)
+```
