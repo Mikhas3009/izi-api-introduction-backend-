@@ -1,4 +1,4 @@
-import { TaskEntity } from "../../core/entities/task.entity";
+import { TaskEntity } from "../entities/task.entity";
 import { BaseRepository } from "./base.repository";
 
 /**
@@ -58,6 +58,32 @@ export class TaskRepository extends BaseRepository<TaskEntity> {
      */
     public async deleteTask(id: number) {
         return await this.repository.delete(id).catch((err) => {
+            throw err;
+        });
+    }
+
+    /**
+     * Поиск задачи по заголовку
+     *
+     * @param taskTitle - заголовок задачи
+     * @returns Одна конкретная запись задачи
+     * @throws Ошибка базы данных при неудачном исходе
+     */
+    public async findTaskByTitle(taskTitle: string): Promise<TaskEntity | null> {
+        return await this.repository.findOne({ where: { taskTitle } }).catch((err) => {
+            throw err;
+        });
+    }
+
+    /**
+     * Поиск задачи по ID
+     *
+     * @param taskID - идентификатор задачи
+     * @returns Одна конкретная запись задачи
+     * @throws Ошибка базы данных при неудачном исходе
+     */
+    public async findTaskByID(taskID: number): Promise<TaskEntity | null> {
+        return await this.repository.findOne({ where: { taskID } }).catch((err) => {
             throw err;
         });
     }

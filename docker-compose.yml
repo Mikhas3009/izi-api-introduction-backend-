@@ -18,6 +18,19 @@ services:
             timeout: 5s
             retries: 5
 
+    redis:
+        image: redis:7-alpine
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     app:
         build: .
         restart: always
@@ -27,8 +40,12 @@ services:
             - example.env
         environment:
             DB_HOST: db
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
         depends_on:
             db:
+                condition: service_healthy
+            redis:
                 condition: service_healthy
         volumes:
             # - .:/usr/src/app
@@ -37,3 +54,4 @@ services:
 
 volumes:
     db_data:
+    redis_data:

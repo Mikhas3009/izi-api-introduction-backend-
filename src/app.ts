@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import { handleNotFound } from "./application/middlewars/not-found-handler";
 import { setupSwagger } from "./infrastructure/config/swagger.config";
 import { TaskRouter } from "./application/routers/task.touter";
+import { errorMiddleware } from "./application/middlewars/error-handler";
 
 export async function createApp() {
     const app = express();
@@ -15,6 +16,7 @@ export async function createApp() {
     app.get("/", (req, res) => {
         res.send("Hello");
     });
+    app.use(errorMiddleware);
     app.use(handleNotFound);
 
     return app;

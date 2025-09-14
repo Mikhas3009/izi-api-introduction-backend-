@@ -1,5 +1,7 @@
 # Серверная часть приложения
+
 [Клиентская часть](https://github.com/Mikhas3009/izi-api-introduction-frontend-)
+
 # Запуск приложения
 
 ## Разворачивание с помощью Docker
@@ -19,7 +21,8 @@ http://localhost:4000/docs
 IZI-Api.postman_collection.json
 
 # Стуктура проекта
-``` bash
+
+```bash
 src/
  ├── core/                   # Бизнес-логика
  │    ├── entities/          # Сущности (Task)
@@ -27,10 +30,10 @@ src/
  │    ├── interfaces/        # Интерфейсы (TaskRequestInterface и т.д.)
  │    └── services/          # Сервисы
  │
- ├── application/            # Основной слой приложения 
+ ├── application/            # Основной слой приложения
  │    ├── controllers/       # Контроллеры Express
  │    ├── dto/               # DTO-объекты для API
- │    ├── middlewares/       # Middleware 
+ │    ├── middlewares/       # Middleware
  │    └── routers/           # Маршруты Express
  │
  ├── infrastructure/         # Инфраструктура (внешние сервисы)

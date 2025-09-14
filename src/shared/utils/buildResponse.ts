@@ -1,4 +1,4 @@
-import { BaseResponseInterface } from "../../core/interfaces/base-response.interface";
+import { BaseResponseInterface } from "../interfaces/base-response.interface";
 
 /**
  * Функция построения ответа

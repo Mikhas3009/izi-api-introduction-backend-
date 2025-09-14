@@ -1,15 +1,23 @@
 import { Request } from "express";
 import { TaskRepository } from "../../infrastructure/repository/task.repository";
 import { TaskRequestInterface } from "../interfaces/task.interface";
-import { TaskEntity } from "../entities/task.entity";
+import { TaskEntity } from "../../infrastructure/entities/task.entity";
+import { HttpException } from "../../shared/utils/http-error";
+import { HttpStatus } from "../enums/http-statuses.enum";
+import { CacheInterface } from "../../shared/interfaces/cashe.interface";
+import { RedisCashService } from "../../shared/services/redis-cash.service";
+import { CasheKeys } from "../enums/cashe-keys.enum";
 
 export class TaskService {
-    constructor(private taskRepository = new TaskRepository()) {}
+    constructor(
+        private taskRepository = new TaskRepository(),
+        private cashService: CacheInterface<TaskEntity> = new RedisCashService<TaskEntity>(),
+    ) {}
 
     /**
      * Получение списка всех задач
      *
-     * @throws {Error}
+     * @throws {HttpException}
      * Если не удалось получить список задач из базы данных
      *
      * @returns {Promise<TaskEntity[]>}
@@ -17,7 +25,10 @@ export class TaskService {
      */
     public async getTasks(): Promise<TaskEntity[]> {
         return await this.taskRepository.getTasks().catch(() => {
-            throw new Error("Не удалось получить список задач");
+            throw new HttpException(
+                "Не удалось получить список задач",
+                HttpStatus.InternalServerError,
+            );
         });
     }
 
@@ -25,16 +36,28 @@ export class TaskService {
      * Метод для создания новой задачи
      * @param {TaskRequestInterface} req - Объект HTTP-запроса, содержащий задачу (`req.body.task`)
      *
-     * @throws {Error} Если не удалось добавить задачу в базу данных
+     * @throws {HttpException} Если не удалось добавить задачу в базу данных
      *
      * @returns {Promise<TaskEntity>}
      * Возвращает созданную сущность задачи
      */
     public async createTask(req: TaskRequestInterface): Promise<TaskEntity> {
-        const task = this.taskRepository.getModelInstance(req.body.task);
+        const newTask = this.taskRepository.getModelInstance(req.body.task);
+        const task = await this.taskRepository.findTaskByTitle(newTask.taskTitle).catch(() => {
+            throw new HttpException("Ошибка сервера", HttpStatus.InternalServerError);
+        });
 
-        return await this.taskRepository.addTask(task).catch(() => {
-            throw new Error("Не удалось добавить задачу");
+        if (task) {
+            throw new HttpException(
+                "Задача с таким заголовком уже существует",
+                HttpStatus.BadRequest,
+            );
+        }
+
+        this.cashService.saveToCache(`${CasheKeys.TASKS}:${newTask.taskID}`, newTask, 60 * 60);
+
+        return await this.taskRepository.addTask(newTask).catch(() => {
+            throw new HttpException("Не удалось добавить задачу", HttpStatus.InternalServerError);
         });
     }
 
@@ -42,7 +65,7 @@ export class TaskService {
      * Метод для изменения статуса задачи
      * @param {TaskRequestInterface} req - Объект HTTP-запроса с path параметром `id` (id задачи) и обновлёнными данными задачи в `body.task`
      *
-     * @throws {Error} Если не удалось обновить задачу или передан некорректный id
+     * @throws {HttpException} Если не удалось обновить задачу или передан некорректный id
      *
      * @returns {Promise<number>}
      * Количество обновлённых записей (Возвращает 1 -  одна запись обновлена)
@@ -53,11 +76,14 @@ export class TaskService {
 
         const updated = (
             await this.taskRepository.updateTask(Number(id), task).catch(() => {
-                throw new Error("Не удалось изменить статус задачи");
+                throw new HttpException(
+                    "Не удалось изменить статус задачи",
+                    HttpStatus.InternalServerError,
+                );
             })
         ).affected!;
-        if (!updated && updated == 0) {
-            throw new Error("Неккоректный id задачи");
+        if (!updated || updated == 0) {
+            throw new HttpException("Неккоректный id задачи", HttpStatus.BadRequest);
         }
 
         return updated;
@@ -67,7 +93,7 @@ export class TaskService {
      * Метод для удаления задачи
      * @param {Request} req - HTTP-запрос с paht-параметром `id` задачи
      *
-     * @throws {Error} Если задача не найдена или не удалось удалить
+     * @throws {HttpException} Если задача не найдена или не удалось удалить
      *
      * @returns {Promise<number>}
      * Количество удалённых записей (Возвращает 1 - одна задача удалена)
@@ -76,14 +102,50 @@ export class TaskService {
         const { id } = req.params;
         const deleted = (
             await this.taskRepository.deleteTask(Number(id)).catch(() => {
-                throw new Error("Не удалось удалить задачу задачу");
+                throw new HttpException(
+                    "Не удалось удалить задачу задачу",
+                    HttpStatus.InternalServerError,
+                );
             })
         ).affected!;
 
-        if (!deleted && deleted == 0) {
-            throw new Error("Неккоректный id задачи");
+        if (!deleted || deleted == 0) {
+            throw new HttpException("Неккоректный id задачи", HttpStatus.BadRequest);
         }
 
         return deleted;
+    }
+
+    /**
+     * Метод для получения задачи по ID
+     * @param {Request} req - HTTP-запрос с paht-параметром `id` задачи
+     *
+     * @throws {HttpException} Если задача не найдена или не удалось найти
+     *
+     * @returns {Promise<TaskEntity>}
+     * Объект задачи
+     */
+    public async getTaskByID(req: Request): Promise<TaskEntity | null> {
+        const { id } = req.params;
+        const task = await this.cashService.getFromCache(`${CasheKeys.TASKS}:${id}`);
+
+        if (task) {
+            return task;
+        }
+
+        const foundedTask = await this.taskRepository.findTaskByID(Number(id)).catch(() => {
+            throw new HttpException(
+                `Не удалось получить задачу с ID:${id}`,
+                HttpStatus.InternalServerError,
+            );
+        });
+
+        if (!foundedTask) {
+            throw new HttpException(`Задачи с ID:${id} не существует`, HttpStatus.BadRequest);
+        }
+
+        this.cashService.saveToCache(`${CasheKeys.TASKS}:${foundedTask.taskID}`, foundedTask);
+
+        return foundedTask;
     }
 }

@@ -145,3 +145,21 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/DeleteResponse"
+
+        get:
+            summary: Получить задачу
+            description: Получает задачу по ее уникальному идентификатору(id)
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                  description: ID задачи
+            responses:
+                "200":
+                    description: Задача успешно получена
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TaskResponse"

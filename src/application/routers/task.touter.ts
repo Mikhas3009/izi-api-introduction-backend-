@@ -20,5 +20,6 @@ export class TaskRouter extends BaseRouter<TaskController> {
             this.controller.setTaskStasus.bind(this.controller),
         );
         this.router.delete("/api/tasks/:id", this.controller.deleteTask.bind(this.controller));
+        this.router.get("/api/tasks/:id", this.controller.getTaskByID.bind(this.controller));
     }
 }
