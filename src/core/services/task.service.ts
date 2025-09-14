@@ -5,13 +5,13 @@ import { TaskEntity } from "../../infrastructure/entities/task.entity";
 import { HttpException } from "../../shared/utils/http-error";
 import { HttpStatus } from "../enums/http-statuses.enum";
 import { CacheInterface } from "../../shared/interfaces/cashe.interface";
-import { RedisCashService } from "../../shared/services/redis-cash.service";
-import { CasheKeys } from "../enums/cashe-keys.enum";
+import { RedisCacheService } from "../../shared/services/redis-cash.service";
+import { CacheKeys } from "../enums/cashe-keys.enum";
 
 export class TaskService {
     constructor(
         private taskRepository = new TaskRepository(),
-        private cashService: CacheInterface<TaskEntity> = new RedisCashService<TaskEntity>(),
+        private cacheService: CacheInterface<TaskEntity> = new RedisCacheService<TaskEntity>(),
     ) {}
 
     /**
@@ -54,7 +54,7 @@ export class TaskService {
             );
         }
 
-        this.cashService.saveToCache(`${CasheKeys.TASKS}:${newTask.taskID}`, newTask, 60 * 60);
+        this.cacheService.saveToCache(`${CacheKeys.TASKS}:${newTask.taskID}`, newTask, 60 * 60);
 
         return await this.taskRepository.addTask(newTask).catch(() => {
             throw new HttpException("Не удалось добавить задачу", HttpStatus.InternalServerError);
@@ -113,6 +113,8 @@ export class TaskService {
             throw new HttpException("Неккоректный id задачи", HttpStatus.BadRequest);
         }
 
+        this.cacheService.deleteFromCache(`${CacheKeys.TASKS}:${id}`)
+
         return deleted;
     }
 
@@ -127,7 +129,7 @@ export class TaskService {
      */
     public async getTaskByID(req: Request): Promise<TaskEntity | null> {
         const { id } = req.params;
-        const task = await this.cashService.getFromCache(`${CasheKeys.TASKS}:${id}`);
+        const task = await this.cacheService.getFromCache(`${CacheKeys.TASKS}:${id}`);
 
         if (task) {
             return task;
@@ -144,7 +146,7 @@ export class TaskService {
             throw new HttpException(`Задачи с ID:${id} не существует`, HttpStatus.BadRequest);
         }
 
-        this.cashService.saveToCache(`${CasheKeys.TASKS}:${foundedTask.taskID}`, foundedTask);
+        this.cacheService.saveToCache(`${CacheKeys.TASKS}:${foundedTask.taskID}`, foundedTask);
 
         return foundedTask;
     }
