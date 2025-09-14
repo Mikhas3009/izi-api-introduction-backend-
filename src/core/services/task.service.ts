@@ -113,7 +113,7 @@ export class TaskService {
             throw new HttpException("Неккоректный id задачи", HttpStatus.BadRequest);
         }
 
-        this.cacheService.deleteFromCache(`${CacheKeys.TASKS}:${id}`)
+        this.cacheService.deleteFromCache(`${CacheKeys.TASKS}:${id}`);
 
         return deleted;
     }

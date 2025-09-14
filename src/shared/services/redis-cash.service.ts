@@ -9,7 +9,7 @@ export class RedisCacheService<T> implements CacheInterface<T> {
             const serialized = JSON.stringify(value);
             await redisClient.set(key, serialized, "EX", ttl);
         } catch (err) {
-            console.error(`[Redis] ошибка сохранения для ключа ${key}:`, err);     
+            console.error(`[Redis] ошибка сохранения для ключа ${key}:`, err);
         }
     }
 
@@ -19,7 +19,7 @@ export class RedisCacheService<T> implements CacheInterface<T> {
             return data ? (JSON.parse(data) as T) : null;
         } catch (err) {
             console.error(`[Redis] ошибка получения для ключа ${key}:`, err);
-            return null; 
+            return null;
         }
     }
 
