@@ -30,9 +30,10 @@ export function validateAndTransformTask(req: Request, res: Response, next: Next
         task.taskTitle = title.trim();
     }
 
-    // Валидация completed
+    // Трансформация completed
     if (completed !== undefined) {
-        if (typeof completed !== "boolean") {
+        console.log(completed)
+        if (completed != "true" && completed != "false") {
             return res
                 .status(HttpStatus.BadRequest)
                 .json(buildResponse(false, "Поле completed должно быть булевым значением", null));
